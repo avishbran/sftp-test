@@ -13,9 +13,9 @@ import (
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 
-	"path/filepath"
-	"io/ioutil"
 	"io"
+	"io/ioutil"
+	"path/filepath"
 )
 
 var confDir = flag.String("remote-dir", "/", "Remote directory to search")
@@ -36,7 +36,7 @@ const VERSION_STR = "SFTP-TEST version 1.2"
 
 func main() {
 	flag.Parse()
-	
+
 	if *confVersion {
 		fmt.Println(VERSION_STR)
 		return
@@ -61,7 +61,7 @@ func main() {
 
 	// Create an SSH connection
 	fmt.Printf("Opening SSH connection to %s on port %s...", *confHost, *confPort)
-	conn, err := ssh.Dial("tcp", *confHost + ":" + *confPort, config)
+	conn, err := ssh.Dial("tcp", *confHost+":"+*confPort, config)
 	if err != nil {
 		fmt.Println(" FAIL")
 		log.Fatal(err)
@@ -113,12 +113,13 @@ func main() {
 			if *confRename {
 				for _, f := range files {
 					oldname := *confDir + f
-					newname := *confDir + f+*confRenameSuffix
+					newname := *confDir + f + *confRenameSuffix
 					fmt.Println("Renaming ", oldname)
 					err := sftpc.Rename(oldname, newname)
 					if err != nil {
 						log.Printf("Rename error: (%s --> %s) %v\n", oldname, newname, err)
 					}
+					time.Sleep(500 * time.Millisecond)
 				}
 			}
 
