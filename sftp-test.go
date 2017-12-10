@@ -32,13 +32,14 @@ var confGetFile = flag.Bool("read", false, "Read and save the remote file(s)")
 var confRenameSuffix = flag.String("rename-suffix", "", "Rename suffix (use with -rename)")
 var confVersion = flag.Bool("version", false, "Print version")
 
-const VERSION_STR = "SFTP-TEST version 1.2"
+// VersionStr ...
+const VersionStr = "SFTP-TEST version 1.4"
 
 func main() {
 	flag.Parse()
 
 	if *confVersion {
-		fmt.Println(VERSION_STR)
+		fmt.Println(VersionStr)
 		return
 	}
 
@@ -51,33 +52,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Configure the SSH connection
-	config := &ssh.ClientConfig{
-		User: *confUser,
-		Auth: []ssh.AuthMethod{
-			ssh.Password(*confPwd),
-		},
-	}
 
-	// Create an SSH connection
-	fmt.Printf("Opening SSH connection to %s on port %s...", *confHost, *confPort)
-	conn, err := ssh.Dial("tcp", *confHost+":"+*confPort, config)
+	conn, sftpc, err := connect()
 	if err != nil {
-		fmt.Println(" FAIL")
-		log.Fatal(err)
-	}
-	defer conn.Close()
-	fmt.Println(" OK")
-
-	// open an SFTP session over the existing SSH connection
-	fmt.Printf("Opening SFTP session...")
-	sftpc, err := sftp.NewClient(conn)
-	if err != nil {
-		fmt.Println(" FAIL")
 		log.Fatal(err)
 	}
 	defer sftpc.Close()
-	fmt.Println(" OK")
+	defer conn.Close()
 
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -85,41 +66,59 @@ func main() {
 		defer wg.Done()
 		var total = *confTotal
 		interval := time.Duration(*confInterval) * time.Second
-
+		reconnect := false
 		for total > 0 {
 			// walk a directory
 			fmt.Println("Reading directory: ", *confDir)
 			files, err := readDirectory(sftpc, *confDir, regex)
 			if err != nil {
 				log.Printf("Error: %v\n", err)
-				break
-			}
+				if err == io.EOF {
+					reconnect = true
+				}
+			} else {
 
-			// print matched files
-			fmt.Println("Matched files: ", len(files))
-			for _, f := range files {
-				fmt.Println("\t", f)
-			}
-
-			// read (copy) files
-			if *confGetFile {
+				// print matched files
+				fmt.Println("Matched files: ", len(files))
 				for _, f := range files {
-					fmt.Printf("reading file: %s...\n", f)
-					getFile(sftpc, f, *confDir)
+					fmt.Println("\t", f)
+				}
+
+				// read (copy) files
+				if *confGetFile {
+					for _, f := range files {
+						fmt.Printf("reading file: %s...\n", f)
+						getFile(sftpc, f, *confDir)
+					}
+				}
+
+				// rename files
+				if *confRename {
+					for _, f := range files {
+						oldname := *confDir + f
+						newname := *confDir + f + *confRenameSuffix
+						fmt.Println("Renaming ", oldname)
+						err := sftpc.Rename(oldname, newname)
+						if err != nil {
+							log.Printf("Rename error: (%s --> %s) %v\n", oldname, newname, err)
+							if err == io.EOF {
+								reconnect = true
+							}
+						}
+					}
+					time.Sleep(500 * time.Millisecond)
 				}
 			}
 
-			// rename files
-			if *confRename {
-				for _, f := range files {
-					oldname := *confDir + f
-					newname := *confDir + f + *confRenameSuffix
-					fmt.Println("Renaming ", oldname)
-					err := sftpc.Rename(oldname, newname)
-					if err != nil {
-						log.Printf("Rename error: (%s --> %s) %v\n", oldname, newname, err)
-					}
-					time.Sleep(500 * time.Millisecond)
+			if reconnect {
+				reconnect = false
+				log.Println("Reconnecting to host in 10 seconds...")
+				sftpc.Close()
+				conn.Close()
+				time.Sleep(10 * time.Second)
+				conn, sftpc, err = connect()
+				if err != nil {
+					log.Fatal(err)
 				}
 			}
 
@@ -217,3 +216,34 @@ func validateConfiguration() bool {
 
 	return true
 }
+
+func connect() (conn *ssh.Client, sftpc *sftp.Client, err error) {
+	// Configure the SSH connection
+	config := &ssh.ClientConfig{
+		User: *confUser,
+		Auth: []ssh.AuthMethod{
+			ssh.Password(*confPwd),
+		},
+	}
+	// Create an SSH connection
+	fmt.Printf("Opening SSH connection to %s on port %s...", *confHost, *confPort)
+	conn, err = ssh.Dial("tcp", *confHost+":"+*confPort, config)
+	if err != nil {
+		fmt.Println(" FAIL")
+		return
+	}
+	fmt.Println(" OK")
+
+	// open an SFTP session over the existing SSH connection
+	fmt.Printf("Opening SFTP session...")
+	sftpc, err = sftp.NewClient(conn)
+	if err != nil {
+		fmt.Println(" FAIL")
+		conn.Close()
+		return
+	}
+
+	fmt.Println(" OK")
+	return
+}
+
