@@ -52,6 +52,7 @@ func main() {
 		os.Exit(1)
 	}
 
+
 	conn, sftpc, err := connect()
 	if err != nil {
 		log.Fatal(err)
@@ -105,6 +106,7 @@ func main() {
 							}
 						}
 					}
+					time.Sleep(500 * time.Millisecond)
 				}
 			}
 
@@ -244,3 +246,4 @@ func connect() (conn *ssh.Client, sftpc *sftp.Client, err error) {
 	fmt.Println(" OK")
 	return
 }
+
