@@ -1,0 +1,1415 @@
+
+# Running Configuration Mediant SW
+
+
+## IP NETWORK
+
+  configure network
+   tls 0
+    name default
+    tls-version unlimited
+    ciphers-server "ALL"
+    ciphers-client "ALL"
+    ocsp-server disable
+    ocsp-port 2560
+    dh-key-size 1024
+    ocsp-default-response reject
+   exit
+   ether-group 0
+    mode single
+    member1 "GE_1"
+    activate
+   exit
+   ether-group 1
+    mode single
+    member1 "GE_2"
+    activate
+   exit
+   ether-group 2
+    activate
+   exit
+   ether-group 3
+    activate
+   exit
+   ether-group 4
+    mode single
+    member1 "GE_5"
+    activate
+   exit
+   ether-group 5
+    mode single
+    member1 "GE_6"
+    activate
+   exit
+   ether-group 6
+    mode single
+    member1 "GE_7"
+    activate
+   exit
+   ether-group 7
+    mode single
+    member1 "GE_8"
+    activate
+   exit
+   ether-group 8
+    mode single
+    member1 "GE_9"
+    activate
+   exit
+   ether-group 9
+    mode single
+    member1 "GE_10"
+    activate
+   exit
+   ether-group 10
+    activate
+   exit
+   ether-group 11
+    activate
+   exit
+   ether-group 12
+    activate
+   exit
+   ether-group 13
+    activate
+   exit
+   ether-group 14
+    activate
+   exit
+   network-dev 0
+    underlying-if "GROUP_1"
+    name "vlan 1"
+    tagging untagged
+    activate
+   exit
+   network-dev 1
+    vlan-id 3987
+    underlying-if "GROUP_2"
+    name "maint G2-fixme"
+    tagging untagged
+    activate
+   exit
+   network-dev 4
+    vlan-id 5
+    underlying-if "GROUP_5"
+    name "dev 5"
+    tagging untagged
+    activate
+   exit
+   network-dev 5
+    vlan-id 6
+    underlying-if "GROUP_6"
+    name "dev 6"
+    tagging untagged
+    activate
+   exit
+   network-dev 6
+    vlan-id 7
+    underlying-if "GROUP_7"
+    name "dev 7"
+    tagging untagged
+    activate
+   exit
+   network-dev 7
+    vlan-id 8
+    underlying-if "GROUP_8"
+    name "dev 8"
+    tagging untagged
+    activate
+   exit
+   network-dev 8
+    vlan-id 9
+    underlying-if "GROUP_9"
+    name "dev 9"
+    tagging untagged
+    activate
+   exit
+   network-dev 9
+    vlan-id 10
+    underlying-if "GROUP_10"
+    name "dev 10"
+    tagging untagged
+    activate
+   exit
+   interface network-if 0
+    ip-address 10.8.41.182
+    gateway 10.8.0.1
+    name "Mgmt"
+    primary-dns 10.1.1.11
+    underlying-dev "vlan 1"
+    activate
+   exit
+   interface network-if 1
+    application-type media-control
+    ip-address 10.8.40.181
+    gateway 10.8.0.1
+    name "Voice0"
+    underlying-dev "dev 5"
+    activate
+   exit
+   interface network-if 2
+    application-type media-control
+    ip-address 10.8.40.182
+    gateway 10.8.0.1
+    name "Voice1"
+    underlying-dev "dev 6"
+    activate
+   exit
+   interface network-if 3
+    application-type media-control
+    ip-address 10.8.40.183
+    gateway 10.8.0.1
+    name "Voice2"
+    underlying-dev "dev 7"
+    activate
+   exit
+   interface network-if 4
+    application-type media-control
+    ip-address 10.8.40.184
+    gateway 10.8.0.1
+    name "Voice3"
+    underlying-dev "dev 8"
+    activate
+   exit
+   interface network-if 5
+    application-type media-control
+    ip-address 10.8.40.185
+    gateway 10.8.0.1
+    name "Voice4"
+    underlying-dev "dev 9"
+    activate
+   exit
+   interface network-if 6
+    application-type media-control
+    ip-address 10.8.40.186
+    gateway 10.8.0.1
+    name "Voice5"
+    underlying-dev "dev 10"
+    activate
+   exit
+   interface network-if 10
+    application-type maintenance
+    ip-address 10.80.41.183
+    name "Maint"
+    underlying-dev "maint G2-fixme"
+    activate
+   exit
+   high-availability settings
+    unit-id-name "ILO 2.155"
+    revertive-mode on
+    remote-address 10.80.41.182
+    redundant-unit-id-name "ILO 2.21"
+    activate
+   exit
+   mtc settings
+    sbc-cluster-mode disabled
+    sbc-device-role sbc-or-signaling-component-(sc)
+    activate
+   exit
+   physical-port 0
+    port-description "User Port #0"
+    activate
+   exit
+   physical-port 1
+    port-description "User Port #1"
+    activate
+   exit
+   physical-port 2
+    port-description "User Port #2"
+    activate
+   exit
+   physical-port 3
+    port-description "User Port #3"
+    activate
+   exit
+   physical-port 4
+    port-description "User Port #4"
+    activate
+   exit
+   physical-port 5
+    port-description "User Port #5"
+    activate
+   exit
+   physical-port 6
+    port-description "User Port #6"
+    activate
+   exit
+   physical-port 7
+    port-description "User Port #7"
+    activate
+   exit
+   physical-port 8
+    port-description "User Port #8"
+    activate
+   exit
+   physical-port 9
+    port-description "User Port #9"
+    activate
+   exit
+   physical-port 10
+    port-description "User Port #12"
+    activate
+   exit
+   physical-port 11
+    port-description "User Port #175"
+    activate
+   exit
+  exit
+
+## SIGNALING & MEDIA
+
+  configure voip
+   coders-and-profiles ip-profile 1
+    profile-name "ARM_IP_Profile"
+    coders-group "AudioCodersGroups_0"
+    disconnect-on-broken-connection disconnect
+    sbc-rmt-refer-behavior handle-locally
+    activate
+   exit
+   coders-and-profiles ip-profile 2
+    profile-name "711_RTP"
+    coders-group "AudioCodersGroups_0"
+    sbc-ext-coders-group-name "AudioCodersGroups_0"
+    allowed-audio-coders-group-name "711"
+    sbc-media-security-behaviour rtp
+    activate
+   exit
+   coders-and-profiles ip-profile 3
+    profile-name "OPUS_DTLS"
+    coders-group "AudioCodersGroups_0"
+    sbc-ext-coders-group-name "AudioCodersGroups_1"
+    allowed-audio-coders-group-name "OPUS"
+    sbc-media-security-behaviour srtp
+    sbc-media-security-method dtls
+    activate
+   exit
+   coders-and-profiles audio-coders-groups 0
+    coders-group-name "AudioCodersGroups_0"
+    activate
+    audio-coders 0
+     name g711-alaw
+     p-time 20
+     rate 64
+     activate
+    exit
+    audio-coders 1
+     name g711-ulaw
+     p-time 20
+     rate 64
+     activate
+    exit
+   exit
+   coders-and-profiles audio-coders-groups 1
+    coders-group-name "AudioCodersGroups_1"
+    activate
+    audio-coders 0
+     name opus
+     p-time 20
+     payload-type 111
+     activate
+    exit
+   exit
+   coders-and-profiles allowed-audio-coders-groups 0
+    coders-group-name "711"
+    activate
+    allowed-audio-coders 0
+     coder g711-alaw
+     activate
+    exit
+   exit
+   coders-and-profiles allowed-audio-coders-groups 1
+    coders-group-name "OPUS"
+    activate
+    allowed-audio-coders 0
+     coder opus
+     activate
+    exit
+   exit
+   realm 0
+    name "mr0"
+    ipv4if "Voice0"
+    port-range-start 6000
+    session-leg 11907
+    is-default enable
+    activate
+   exit
+   realm 1
+    name "mr1"
+    ipv4if "Voice1"
+    port-range-start 6000
+    session-leg 11907
+    activate
+   exit
+   realm 2
+    name "mr2"
+    ipv4if "Voice2"
+    port-range-start 6000
+    session-leg 11907
+    activate
+   exit
+   realm 3
+    name "mr3"
+    ipv4if "Voice3"
+    port-range-start 6000
+    session-leg 11907
+    activate
+   exit
+   realm 4
+    name "mr4"
+    ipv4if "Voice4"
+    port-range-start 6000
+    session-leg 11907
+    activate
+   exit
+   realm 5
+    name "mr5"
+    ipv4if "Voice5"
+    port-range-start 6000
+    session-leg 11907
+    activate
+   exit
+   sbc routing sbc-routing-policy 0
+    name "Default_SBCRoutingPolicy"
+    lcr-enable enabled
+    lcr-call-length 0
+    lcr-default-cost highest-cost
+    activate
+   exit
+   sbc routing sbc-routing-policy 1
+    name "Bahir_DTLS"
+    activate
+   exit
+   srd 0
+    name "srd0"
+    used-by-routing-server used
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 1
+    name "srd1"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 2
+    name "srd2"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 3
+    name "srd3"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 4
+    name "srd4"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 5
+    name "srd5"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 6
+    name "srd6"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 7
+    name "srd7"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 8
+    name "srd8"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 9
+    name "srd9"
+    used-by-routing-server used
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 10
+    name "srd10"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 11
+    name "srd11"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 12
+    name "srd12"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 13
+    name "srd13"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 14
+    name "srd14"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 15
+    name "srd15"
+    used-by-routing-server used
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 16
+    name "srd16"
+    used-by-routing-server used
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 17
+    name "srd17"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 18
+    name "srd18"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 19
+    name "srd19"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 20
+    name "srd20"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 21
+    name "srd21"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 22
+    name "srd22"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 23
+    name "srd23"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 24
+    name "srd24NoMedia"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 25
+    name "niss"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 26
+    name "srdYariv"
+    activate
+   exit
+   srd 27
+    name "Bahir_DTLS"
+    type isolated
+    sbc-routing-policy-name "Bahir_DTLS"
+    activate
+   exit
+   srd 30
+    name "srd30"
+    used-by-routing-server used
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 31
+    name "srd31"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 32
+    name "srd32"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 33
+    name "srd33"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 34
+    name "srd34"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 35
+    name "srd35"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 36
+    name "srd36"
+    sbc-routing-policy-name "Default_SBCRoutingPolicy"
+    activate
+   exit
+   srd 50
+    name "srd50"
+    activate
+   exit
+   srd 51
+    name "srd51"
+    activate
+   exit
+   srd 52
+    name "srd52"
+    activate
+   exit
+   srd 53
+    name "srd53"
+    activate
+   exit
+   srd 54
+    name "srd54"
+    activate
+   exit
+   srd 55
+    name "srd55"
+    activate
+   exit
+   srd 56
+    name "srd56"
+    activate
+   exit
+   srd 57
+    name "srd57"
+    activate
+   exit
+   srd 58
+    name "srd58"
+    activate
+   exit
+   srd 59
+    name "srd59"
+    activate
+   exit
+   srd 60
+    name "srd60"
+    activate
+   exit
+   message message-policy 0
+    name "test"
+    activate
+   exit
+   message message-policy 1
+    name "Malicious Signature DB Protection"
+    max-message-length -1
+    max-header-length -1
+    max-body-length -1
+    max-num-headers -1
+    max-num-bodies -1
+    send-rejection policy-drop
+    method-list-type policy-blacklist
+    body-list-type policy-blacklist
+    activate
+   exit
+   message message-policy 2
+    name "MessagePolicy_2"
+    max-message-length -1
+    max-header-length -1
+    max-body-length -1
+    max-num-headers -1
+    max-num-bodies -1
+    send-rejection policy-drop
+    method-list-type policy-blacklist
+    body-list-type policy-blacklist
+    signature-db-enable enabled
+    activate
+   exit
+   sip-interface 0
+    interface-name "SIPInterface_0"
+    network-interface "Voice0"
+    srd-name "srd0"
+    message-policy-name "test"
+    tls-context-name ""
+    media-realm-name "mr0"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    used-by-routing-server used
+    activate
+   exit
+   sip-interface 1
+    interface-name "SIPInterface_1"
+    network-interface "Voice1"
+    srd-name "srd1"
+    tls-context-name ""
+    media-realm-name "mr1"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 2
+    interface-name "SIPInterface_2"
+    network-interface "Voice2"
+    srd-name "srd2"
+    tls-context-name ""
+    media-realm-name "mr2"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 3
+    interface-name "SIPInterface_3"
+    network-interface "Voice3"
+    srd-name "srd3"
+    tls-context-name ""
+    media-realm-name "mr3"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 4
+    interface-name "SIPInterface_4"
+    network-interface "Voice4"
+    srd-name "srd4"
+    tls-context-name ""
+    media-realm-name "mr4"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 5
+    interface-name "SIPInterface_5"
+    network-interface "Voice5"
+    srd-name "srd5"
+    tls-context-name ""
+    media-realm-name "mr5"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    used-by-routing-server used
+    activate
+   exit
+   sip-interface 6
+    interface-name "SIPInterface_6"
+    network-interface "Voice0"
+    udp-port 5070
+    tcp-port 5070
+    tls-port 5071
+    srd-name "srd6"
+    tls-context-name ""
+    media-realm-name "mr0"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 7
+    interface-name "SIPInterface_7"
+    network-interface "Voice1"
+    udp-port 5070
+    tcp-port 5070
+    tls-port 5071
+    srd-name "srd7"
+    tls-context-name ""
+    media-realm-name "mr1"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 8
+    interface-name "SIPInterface_8"
+    network-interface "Voice2"
+    udp-port 5070
+    tcp-port 5070
+    tls-port 5071
+    srd-name "srd8"
+    tls-context-name ""
+    media-realm-name "mr2"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 9
+    interface-name "SIPInterface_9"
+    network-interface "Voice3"
+    udp-port 5070
+    tcp-port 5070
+    tls-port 5071
+    srd-name "srd9"
+    tls-context-name ""
+    media-realm-name "mr3"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 10
+    interface-name "SIPInterface_10"
+    network-interface "Voice4"
+    udp-port 5070
+    tcp-port 5070
+    tls-port 5071
+    srd-name "srd10"
+    tls-context-name ""
+    media-realm-name "mr4"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 11
+    interface-name "SIPInterface_11"
+    network-interface "Voice5"
+    udp-port 5070
+    tcp-port 5070
+    tls-port 5071
+    srd-name "srd11"
+    tls-context-name ""
+    media-realm-name "mr5"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 12
+    interface-name "SIPInterface_12"
+    network-interface "Voice0"
+    udp-port 5080
+    tcp-port 5080
+    tls-port 5081
+    srd-name "srd12"
+    tls-context-name ""
+    media-realm-name "mr0"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 13
+    interface-name "SIPInterface_13"
+    network-interface "Voice1"
+    udp-port 5080
+    tcp-port 5080
+    tls-port 5081
+    srd-name "srd13"
+    tls-context-name ""
+    media-realm-name "mr1"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 14
+    interface-name "SIPInterface_14"
+    network-interface "Voice2"
+    udp-port 5080
+    tcp-port 5080
+    tls-port 5081
+    srd-name "srd14"
+    tls-context-name ""
+    media-realm-name "mr2"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 15
+    interface-name "SIPInterface_15"
+    network-interface "Voice3"
+    udp-port 5080
+    tcp-port 508
+    tls-port 5081
+    srd-name "srd15"
+    tls-context-name ""
+    media-realm-name "mr3"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 16
+    interface-name "SIPInterface_16"
+    network-interface "Voice4"
+    udp-port 5080
+    tcp-port 5080
+    tls-port 5081
+    srd-name "srd16"
+    tls-context-name ""
+    media-realm-name "mr4"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 17
+    interface-name "SIPInterface_17"
+    network-interface "Voice5"
+    udp-port 5080
+    tcp-port 5080
+    tls-port 5081
+    srd-name "srd17"
+    tls-context-name ""
+    media-realm-name "mr5"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 18
+    interface-name "SIPInterface_18"
+    network-interface "Voice0"
+    udp-port 5090
+    tcp-port 5090
+    tls-port 5091
+    srd-name "srd18"
+    tls-context-name ""
+    media-realm-name "mr0"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 19
+    interface-name "SIPInterface_19"
+    network-interface "Voice1"
+    udp-port 5090
+    tcp-port 5090
+    tls-port 5091
+    srd-name "srd19"
+    tls-context-name ""
+    media-realm-name "mr1"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 20
+    interface-name "SIPInterface_20"
+    network-interface "Voice2"
+    udp-port 5090
+    tcp-port 5090
+    tls-port 5091
+    srd-name "srd20"
+    tls-context-name ""
+    media-realm-name "mr2"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 21
+    interface-name "SIPInterface_21"
+    network-interface "Voice3"
+    udp-port 5090
+    tcp-port 5090
+    tls-port 5091
+    srd-name "srd21"
+    tls-context-name ""
+    media-realm-name "mr3"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 22
+    interface-name "SIPInterface_22"
+    network-interface "Voice4"
+    udp-port 5090
+    tcp-port 5090
+    tls-port 5091
+    srd-name "srd22"
+    tls-context-name ""
+    media-realm-name "mr4"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 23
+    interface-name "SIPInterface_23"
+    network-interface "Voice5"
+    udp-port 5090
+    tcp-port 5090
+    tls-port 5091
+    srd-name "srd23"
+    tls-context-name ""
+    media-realm-name "mr5"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 24
+    interface-name "NoMeida111"
+    network-interface "Voice0"
+    udp-port 5100
+    tcp-port 5100
+    tls-port 5101
+    srd-name "srd24NoMedia"
+    tls-context-name ""
+    media-realm-name "mr0"
+    sbc-direct-media enable
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 25
+    interface-name "Online"
+    network-interface "Voice0"
+    udp-port 5200
+    tcp-port 520
+    tls-port 5201
+    srd-name "srd0"
+    tls-context-name ""
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 26
+    interface-name "online2"
+    network-interface "Voice0"
+    udp-port 5300
+    tcp-port 530
+    tls-port 5301
+    srd-name "srd0"
+    tls-context-name ""
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 27
+    interface-name "TestSG"
+    network-interface "Voice0"
+    udp-port 5600
+    tcp-port 5600
+    tls-port 5601
+    srd-name "srd0"
+    media-realm-name "mr0"
+    activate
+   exit
+   sip-interface 28
+    interface-name "Bahir_DTLS"
+    network-interface "Voice0"
+    udp-port 5900
+    tcp-port 5900
+    tls-port 5901
+    srd-name "Bahir_DTLS"
+    activate
+   exit
+   sip-interface 30
+    interface-name "SIPInterface_30"
+    network-interface "Voice0"
+    udp-port 5110
+    tcp-port 5110
+    tls-port 5111
+    srd-name "srd30"
+    tls-context-name ""
+    media-realm-name "mr0"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 31
+    interface-name "SIPInterface_31"
+    network-interface "Voice1"
+    udp-port 5110
+    tcp-port 5110
+    tls-port 5111
+    srd-name "srd31"
+    tls-context-name ""
+    media-realm-name "mr1"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 32
+    interface-name "SIPInterface_32"
+    network-interface "Voice2"
+    udp-port 5110
+    tcp-port 5110
+    tls-port 5111
+    srd-name "srd32"
+    tls-context-name ""
+    media-realm-name "mr2"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 33
+    interface-name "SIPInterface_33"
+    network-interface "Voice3"
+    udp-port 5110
+    tcp-port 5110
+    tls-port 5111
+    srd-name "srd33"
+    tls-context-name ""
+    media-realm-name "mr3"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 34
+    interface-name "SIPInterface_34"
+    network-interface "Voice4"
+    udp-port 5110
+    tcp-port 5110
+    tls-port 5111
+    srd-name "srd34"
+    tls-context-name ""
+    media-realm-name "mr4"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 35
+    interface-name "SIPInterface_35"
+    network-interface "Voice5"
+    udp-port 5110
+    tcp-port 5110
+    tls-port 5111
+    srd-name "srd35"
+    tls-context-name ""
+    media-realm-name "mr5"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   sip-interface 36
+    interface-name "SIPInterface_36"
+    network-interface "Voice0"
+    udp-port 5120
+    tcp-port 5120
+    tls-port 5121
+    srd-name "srd36"
+    tls-context-name ""
+    media-realm-name "mr0"
+    block-un-reg-users acpt-all
+    enable-un-auth-registrs enable
+    activate
+   exit
+   proxy-set 0
+    proxy-name "ProxySet_0"
+    proxy-enable-keep-alive using-options
+    srd-name "srd0"
+    sbcipv4-sip-int-name "SIPInterface_0"
+    fail-detect-rtx 4
+    activate
+   exit
+   proxy-set 1
+    proxy-name "TestSG"
+    proxy-enable-keep-alive using-options
+    srd-name "srd0"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "TestSG"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.181:5600"
+     activate
+    exit
+   exit
+   proxy-set 2
+    proxy-name "TP6310"
+    proxy-enable-keep-alive using-options
+    srd-name "srd0"
+    sbcipv4-sip-int-name "SIPInterface_0"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.230.64"
+     activate
+    exit
+   exit
+   proxy-set 3
+    proxy-name "ProxySet_3"
+    proxy-enable-keep-alive using-options
+    srd-name "srd0"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_0"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.182:5060"
+     activate
+    exit
+   exit
+   proxy-set 4
+    proxy-name "ProxySet_4"
+    proxy-enable-keep-alive using-options
+    srd-name "srd1"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_1"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.183:5060"
+     activate
+    exit
+   exit
+   proxy-set 5
+    proxy-name "ProxySet_5"
+    proxy-enable-keep-alive using-options
+    srd-name "srd2"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_2"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.184:5060"
+     activate
+    exit
+   exit
+   proxy-set 6
+    proxy-name "ProxySet_6"
+    proxy-enable-keep-alive using-options
+    srd-name "srd3"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_3"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.185:5060"
+     activate
+    exit
+   exit
+   proxy-set 7
+    proxy-name "ProxySet_7"
+    proxy-enable-keep-alive using-options
+    srd-name "srd4"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_4"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.186:5060"
+     activate
+    exit
+   exit
+   proxy-set 8
+    proxy-name "ProxySet_8"
+    proxy-enable-keep-alive using-options
+    srd-name "srd5"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_5"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.181:5070"
+     activate
+    exit
+   exit
+   proxy-set 9
+    proxy-name "ProxySet_9"
+    proxy-enable-keep-alive using-options
+    srd-name "srd6"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_6"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.182:5070"
+     activate
+    exit
+   exit
+   proxy-set 10
+    proxy-name "ProxySet_10"
+    proxy-enable-keep-alive using-options
+    srd-name "srd7"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_7"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.183:5070"
+     activate
+    exit
+   exit
+   proxy-set 11
+    proxy-name "ProxySet_11"
+    proxy-enable-keep-alive using-options
+    srd-name "srd8"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_8"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.184:5070"
+     activate
+    exit
+   exit
+   proxy-set 12
+    proxy-name "ProxySet_12"
+    proxy-enable-keep-alive using-options
+    srd-name "srd9"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_9"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.185:5070"
+     activate
+    exit
+   exit
+   proxy-set 13
+    proxy-name "ProxySet_13"
+    proxy-enable-keep-alive using-options
+    srd-name "srd10"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_10"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.186:5070"
+     activate
+    exit
+   exit
+   proxy-set 14
+    proxy-name "ProxySet_14"
+    proxy-enable-keep-alive using-options
+    srd-name "srd11"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_11"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.181:5080"
+     activate
+    exit
+   exit
+   proxy-set 15
+    proxy-name "ProxySet_15"
+    proxy-enable-keep-alive using-options
+    srd-name "srd12"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_12"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.182:5080"
+     activate
+    exit
+   exit
+   proxy-set 16
+    proxy-name "ProxySet_16"
+    proxy-enable-keep-alive using-options
+    srd-name "srd13"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_13"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.183:5080"
+     activate
+    exit
+   exit
+   proxy-set 17
+    proxy-name "ProxySet_17"
+    proxy-enable-keep-alive using-options
+    srd-name "srd14"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_14"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.184:5080"
+     activate
+    exit
+   exit
+   proxy-set 18
+    proxy-name "ProxySet_18"
+    proxy-enable-keep-alive using-options
+    srd-name "srd15"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_15"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.185:5080"
+     activate
+    exit
+   exit
+   proxy-set 19
+    proxy-name "ProxySet_19"
+    proxy-enable-keep-alive using-options
+    srd-name "srd16"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_16"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.186:5080"
+     activate
+    exit
+   exit
+   proxy-set 20
+    proxy-name "ProxySet_20"
+    proxy-enable-keep-alive using-options
+    srd-name "srd17"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_17"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.181:5090"
+     activate
+    exit
+   exit
+   proxy-set 21
+    proxy-name "ProxySet_21"
+    proxy-enable-keep-alive using-options
+    srd-name "srd18"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_18"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.182:5090"
+     activate
+    exit
+   exit
+   proxy-set 22
+    proxy-name "ProxySet_22"
+    proxy-enable-keep-alive using-options
+    srd-name "srd19"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_19"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.183:5090"
+     activate
+    exit
+   exit
+   proxy-set 23
+    proxy-name "ProxySet_23"
+    proxy-enable-keep-alive using-options
+    srd-name "srd20"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_20"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.184:5090"
+     activate
+    exit
+   exit
+   proxy-set 24
+    proxy-name "ProxySet_24"
+    proxy-enable-keep-alive using-options
+    srd-name "srd21"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_21"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.185:5090"
+     activate
+    exit
+   exit
+   proxy-set 25
+    proxy-name "ProxySet_25"
+    proxy-enable-keep-alive using-options
+    srd-name "srd22"
+    classification-input ip-port-transport
+    sbcipv4-sip-int-name "SIPInterface_22"
+    fail-detect-rtx 4
+    activate
+    proxy-ip 0
+     proxy-address "10.8.40.186:5090"
+     activate
+    exit
+   exit
+   proxy-set 26
+    proxy-name "ProxySet_26"
+    srd-name "srd0"
+    sbcipv4-sip-int-name "SIPInte
