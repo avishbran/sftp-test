@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"regexp"
 	"sync"
@@ -31,9 +32,10 @@ var confDst = flag.String("local-dir", "", "Local directory to save files (use w
 var confGetFile = flag.Bool("read", false, "Read and save the remote file(s)")
 var confRenameSuffix = flag.String("rename-suffix", "", "Rename suffix (use with -rename)")
 var confVersion = flag.Bool("version", false, "Print version")
+var confMaxPacketSize = flag.Int("max-packet-size", 32*1024, "Max SFTP packet size")
 
 // VersionStr ...
-const VersionStr = "SFTP-TEST version 1.4"
+const VersionStr = "SFTP-TEST version 1.6"
 
 func main() {
 	flag.Parse()
@@ -51,7 +53,6 @@ func main() {
 	if !validateConfiguration() {
 		os.Exit(1)
 	}
-
 
 	conn, sftpc, err := connect()
 	if err != nil {
@@ -224,6 +225,9 @@ func connect() (conn *ssh.Client, sftpc *sftp.Client, err error) {
 		Auth: []ssh.AuthMethod{
 			ssh.Password(*confPwd),
 		},
+		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return nil
+		},
 	}
 	// Create an SSH connection
 	fmt.Printf("Opening SSH connection to %s on port %s...", *confHost, *confPort)
@@ -236,7 +240,7 @@ func connect() (conn *ssh.Client, sftpc *sftp.Client, err error) {
 
 	// open an SFTP session over the existing SSH connection
 	fmt.Printf("Opening SFTP session...")
-	sftpc, err = sftp.NewClient(conn)
+	sftpc, err = sftp.NewClient(conn, sftp.MaxConcurrentRequestsPerFile(1), sftp.MaxPacket(32000))
 	if err != nil {
 		fmt.Println(" FAIL")
 		conn.Close()
@@ -246,4 +250,3 @@ func connect() (conn *ssh.Client, sftpc *sftp.Client, err error) {
 	fmt.Println(" OK")
 	return
 }
-
